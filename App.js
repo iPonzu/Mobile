@@ -6,9 +6,8 @@ export default function App() {
   const [cep, setCep] = useState('')
   const [endereco, setEndereco] = useState({
     logradouro: '',
-    bairro: '',
-    localidade: '',
-    uf: ''
+    uf: '',
+    localidade: ''
   })
 
   async function buscaCep(){
@@ -17,30 +16,110 @@ export default function App() {
       `https://viacep.com.br/ws/${cep}/json/`,
       {
         method: 'GET',
-        headers: {
+        headers:{
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         }
       }
     )
     .then(res => res.json())
-    .then((data) =>{
+    .then((data) => {
       console.log(data)
       setEndereco(
         {
           logradouro: data.logradouro,
-          bairro: data.bairro,
-          localidade: data.localidade,
-          uf: data.uf
+          uf: data.uf,
+          localidade: data.localidade
         }
       )
-      .catch((error) => {
-        console.error('Erro:', error)
-      })
+    })
+    .catch((error) => {
+      console.error('Error:', error)
     })
   }
-  return(
-    
+
+  return (
+    <View style={style.container}>
+      <View style={style.containerPadding}>
+
+        <Image
+        source={require("./assets/logo.jpg")}
+        style={
+          {
+            width: 200,
+            height: 200,
+            alignSelf: 'center',
+            borderRadius: 100,
+            shadowColor: '#000',
+            shadowOffset:{
+              width: 0,
+              height: 2
+            }
+          }
+        }
+        />
+
+        <Text style={style.h1}>Buscar CEP</Text>
+        <Text style={style.h2}>Encontre o endereço pelo CEP</Text>
+        <TextInput
+          value={cep}
+          onChangeText={setCep}
+          maxLength={8}
+          inputMode='numeric'
+          placeholder='Digite o CEP'
+          style={style.inputText}
+          onBlur={buscaCep}
+          />
+          <TextInput
+            style={style.inputText}
+            value={endereco.logradouro}
+            placeholder='Rua / Logradouro'
+          />
+          <TextInput
+            style={style.inputText}
+            value={endereco.localidade}
+            placeholder='Cidade'
+          />
+          <TextInput
+            style={style.inputText}
+            value={endereco.uf}
+            placeholder='Estado'
+          />
+        </View>
+    </View>
+  )
+}
+
+  const style = StyleSheet.create(
+    {
+      h1: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'center',
+  
+      },
+      container: {
+        flex: 1,
+        alignContent: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#CCC',
+      },
+      containerPadding: {
+        padding: 20,
+        alignSelf: 'stretch',
+        backgroundColor: '#FFF',
+        borderRadius: 20,
+        marginHorizontal: 20,
+      },
+      inputText: {
+        borderWidth: 1,
+        borderColor: "#000",
+        borderRadius: 5,
+        padding: 10,
+        alignSelf: 'stretch',
+      }
+    }
   )
 
-}
+
