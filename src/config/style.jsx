@@ -23,6 +23,16 @@ const style = StyleSheet.create(
         },
         corDestaque: {
             color: "tomato",
+        },  
+        containerSobre: {
+            alignItems: "center",
+            padding: 20,
+            fontWeight: "bold",
+        },
+        h2NoBold:{
+            fontSize: 20,
+            paddingTop: 20,
+            fontFamily: "sans-serif",
         }
     }
 )
