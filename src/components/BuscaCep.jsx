@@ -1,93 +1,83 @@
-import { useState }  from 'react'
-import { Text, TextInput, View } from 'react-native'
-import { Image } from 'expo-image'
-import style from '../config/style'
+import { Text, TextInput, View } from "react-native";
+import { useState } from "react";
+import { TextInput as TextInputNP } from "react-native-paper";
+import style from "../config/style";
 
-
-export default function App() {
-  const [cep, setCep] = useState('')
+export default function BuscaCep() {
+  // variáveis em React Native são estados / states
+  const [cep, setCep] = useState("");
   const [endereco, setEndereco] = useState({
-    logradouro: '',
-    uf: '',
-    localidade: ''
-  })
+    logradouro: "",
+    uf: "",
+    localidade: "",
+  });
 
-  async function buscaCep(){
-    console.log(cep)
-    return fetch(
-      `https://viacep.com.br/ws/${cep}/json/`,
-      {
-        method: 'GET',
-        headers:{
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        }
-      }
-    )
-    .then(res => res.json())
-    .then((data) => {
-      console.log(data)
-      setEndereco(
-        {
+  function buscaCep() {
+    console.log(cep);
+    fetch(`https://viacep.com.br/ws/${cep}/json/`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setEndereco({
           logradouro: data.logradouro,
           uf: data.uf,
-          localidade: data.localidade
-        }
-      )
-    })
-    .catch((error) => {
-      console.error('Error:', error)
-    })
+          localidade: data.localidade,
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   }
 
   return (
     <View style={style.container}>
-      <View style={style.containerPadding}>
+      <Text
+        style={{
+          ...style.h1, // unsando o spread operator
+          ...style.corDestaque, // unsando o spread operator
+        }}
+      >
+        Encontre o local pelo CEP
+      </Text>
+      <Text
+        style={{
+          ...style.h2,
+          ...style.espacamentoDelicado,
+        }}
+      >
+        Faça sua busca abaixo
+      </Text>
+      <TextInputNP
+        value={cep}
+        onChangeText={setCep}
+        maxLength={8}
+        inputMode="numeric"
+        placeholder="Digite o CEP"
+        onBlur={buscaCep}
+        mode="outlined"
+      />
 
-        <Image
-        source={require("../../assets/logo.jpg")}
-        style={
-          {
-            width: 200,
-            height: 200,
-            alignSelf: 'center',
-            borderRadius: 100,
-            shadowColor: '#000',
-            shadowOffset:{
-              width: 0,
-              height: 2
-            }
-          }
-        }
-        />
-
-        <Text style={style.h1}>Buscar CEP</Text>
-        <Text style={style.h2}>Encontre o endereço pelo CEP</Text>
-        <TextInput
-          value={cep}
-          onChangeText={setCep}
-          maxLength={8}
-          inputMode='numeric'
-          placeholder='Digite o CEP'
-          style={style.inputText}
-          onBlur={buscaCep}
-          />
-          <TextInput
-            style={style.inputText}
-            value={endereco.logradouro}
-            placeholder='Rua / Logradouro'
-          />
-          <TextInput
-            style={style.inputText}
-            value={endereco.localidade}
-            placeholder='Cidade'
-          />
-          <TextInput
-            style={style.inputText}
-            value={endereco.uf}
-            placeholder='Estado'
-          />
-        </View>
+      <TextInputNP
+        style={style.espacamentoDelicado}
+        value={endereco.logradouro}
+        placeholder="Rua / Logradouro"
+      />
+      <TextInputNP
+        style={style.espacamentoDelicado}
+        value={endereco.localidade}
+        placeholder="Cidade"
+      />
+      <TextInputNP
+        style={style.espacamentoDelicado}
+        value={endereco.uf}
+        placeholder="Estado"
+      />
     </View>
-  )
+  );
 }
